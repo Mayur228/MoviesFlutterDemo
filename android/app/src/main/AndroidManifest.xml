@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.movie.flutter.demo.movie_flutter_demo">
-   <application
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
         android:label="movie_flutter_demo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
