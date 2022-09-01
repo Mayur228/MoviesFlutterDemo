@@ -35,7 +35,10 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
               padding: const EdgeInsets.all(15),
               child: Column(
                 children: [
-                  DropDownWidget(),
+                  const DropDownWidget(),
+                  const SizedBox(height: 15),
+                  const DropDownWidget(),
+                  const SizedBox(height: 15),
                   const TextField(
                     decoration: InputDecoration(
                       hintText: 'Enter Movie Title',
@@ -66,27 +69,36 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
                       // OutlinedButton(
                       //     onPressed: () => {}, child: const Text('Add Movie\n Cover')
                       // ),
+                      const SizedBox(width: 5),
                       Expanded(
                         child: OutlinedButton(
                             onPressed: () => {
-                              _picker?.pickImage(source: ImageSource.gallery)
-                            },
+                                  _picker?.pickImage(
+                                      source: ImageSource.gallery)
+                                },
                             child: const Text('Add Movie Poster')),
                       )
                     ],
                   ),
-                  RatingBarIndicator(
-                    rating: 2,
-                    itemBuilder: (context, index) => const Icon(
+                  const SizedBox(height: 15),
+                  RatingBar.builder(
+                    initialRating: 3,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => const Icon(
                       Icons.star,
                       color: Colors.amber,
                     ),
-                    itemCount: 5,
-                    itemSize: 30.0,
-                    direction: Axis.horizontal,
+                    glow: false,
+                    onRatingUpdate: (rating) {
+                      print(rating);
+                    },
                   ),
+                  const SizedBox(height: 15),
                   Align(
-                    heightFactor: 9.5,
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                         onPressed: () => {}, child: const Text('Submit')),

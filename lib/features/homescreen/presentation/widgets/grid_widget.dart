@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_list_entiy.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/usecases/get_movie_list.dart';
 
 class GridViewWidget extends StatelessWidget {
-  const GridViewWidget({Key? key}) : super(key: key);
+
+  final List<MovieListData> movies;
+
+  const GridViewWidget({Key? key, required this.movies}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final GetMovieList movieList;
 
-    movieList = GetMovieList();
 
     return GridView.count(
         crossAxisCount: 2,
-        children: List.generate(movieList.getData().length, (index) {
+        children: List.generate(movies.length, (index) {
           return Container(
             margin: const EdgeInsets.all(5),
             color: Colors.white,
@@ -25,7 +27,7 @@ class GridViewWidget extends StatelessWidget {
                         image: DecorationImage(
                             fit: BoxFit.fill,
                             image: NetworkImage(
-                                movieList.getData()[index].moviePoster))),
+                                movies[index].moviePoster))),
                   ),
                   Align(
                       alignment: Alignment.bottomLeft,
@@ -42,7 +44,7 @@ class GridViewWidget extends StatelessWidget {
                         ),
                       )),
                   Align(alignment: Alignment.bottomLeft, child: RatingBarIndicator(
-                    rating: movieList.getData()[index].movieRating,
+                    rating: movies[index].movieRating,
                     itemBuilder: (context, index) => const Icon(
                       Icons.star,
                       color: Colors.amber,

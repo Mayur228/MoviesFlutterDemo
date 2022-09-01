@@ -21,6 +21,8 @@ class _VerticalListViewWidgetState extends State<VerticalListViewWidget> {
 
   @override
   Widget build(BuildContext context) {
+    return Container();
+    /*
     return ListView.builder(
         shrinkWrap: true,
         itemCount: movieCategory!.getData().length,
@@ -30,5 +32,7 @@ class _VerticalListViewWidgetState extends State<VerticalListViewWidget> {
               style: const TextStyle(color: Colors.black,fontSize: 18.0),)
           );
         });
+
+     */
   }
 }

@@ -14,7 +14,7 @@ packages:
       name: bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.0"
+    version: "8.1.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -64,20 +64,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
-  dartz:
+  dropdown_button2:
     dependency: "direct main"
     description:
-      name: dartz
+      name: dropdown_button2
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.9"
+    version: "1.7.2"
   equatable:
     dependency: "direct main"
     description:
       name: equatable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0"
+    version: "2.0.5"
   fake_async:
     dependency: transitive
     description:
@@ -96,7 +96,7 @@ packages:
       name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.21.0"
+    version: "8.1.1"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -219,6 +219,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   path:
     dependency: transitive
     description:
@@ -239,14 +246,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.0"
-  rxdart:
-    dependency: transitive
-    description:
-      name: rxdart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.22.6"
+    version: "6.0.3"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -309,5 +309,5 @@ packages:
     source: hosted
     version: "2.1.2"
 sdks:
-  dart: ">=2.17.0-206.0.dev <3.0.0"
-  flutter: ">=2.8.0"
+  dart: ">=2.17.0 <3.0.0"
+  flutter: ">=3.0.0"
