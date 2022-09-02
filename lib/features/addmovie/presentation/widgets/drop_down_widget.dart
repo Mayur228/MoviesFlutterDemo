@@ -1,36 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_category_entiy.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/usecases/get_movie_category.dart';
 
-class DropDownWidget extends StatefulWidget {
-  const DropDownWidget({Key? key}) : super(key: key);
-
-  @override
-  State<DropDownWidget> createState() => _DropDownWidgetState();
-}
-
-class _DropDownWidgetState extends State<DropDownWidget> {
-  GetMovieCategory? movieCategory;
-
-  List<String> catItems = [];
-  late String selectedCat;
-
-  @override
-  void initState() {
-    super.initState();
-    movieCategory = GetMovieCategory();
-    // movieCategory?.getData().forEach((element) {
-    //   catItems.add(element.movieCat);
-    // });
-    catItems = catItems;
-    selectedCat = catItems.first;
-  }
+class DropDownWidget extends StatelessWidget {
+  final List<MovieCategoryData> category;
+  final String selectedCategory;
+  final ValueChanged onChange;
+  const DropDownWidget({Key? key, required this.category, required this.onChange, required this.selectedCategory}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
       child: DropdownButtonFormField<String>(
-        value: selectedCat,
+        value: selectedCategory,
         icon: const Icon(Icons.keyboard_arrow_down_rounded),
         elevation: 16,
         style: const TextStyle(color: Colors.black),
@@ -45,11 +28,9 @@ class _DropDownWidgetState extends State<DropDownWidget> {
           ),
         ),
         onChanged: (String? newValue) {
-          setState(() {
-            selectedCat = newValue!;
-          });
+          onChange(newValue);
         },
-        items: catItems.map((String items) {
+        items: category.map((e) => e.movieCat).map((String items) {
           return DropdownMenuItem(
             value: items,
             child: Text(items),
@@ -58,4 +39,24 @@ class _DropDownWidgetState extends State<DropDownWidget> {
       ),
     );
   }
+
 }
+
+// class _DropDownWidgetState extends State<DropDownWidget> {
+//
+//   List<String> catItems = [];
+//   late String selectedCat;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     movieCategory = GetMovieCategory();
+//     // movieCategory?.getData().forEach((element) {
+//     //   catItems.add(element.movieCat);
+//     // });
+//     catItems = catItems;
+//     selectedCat = catItems.first;
+//   }
+//
+//
+// }

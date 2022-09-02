@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_flutter_demo/core/util/resource.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_category_entiy.dart';
+import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_list_entiy.dart';
 
 import '../../domain/usecases/get_movie_category.dart';
 import '../../domain/usecases/get_movie_list.dart';
@@ -14,14 +15,13 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
   HomeBloc({
     required GetMovieCategory category,
     required GetMovieList movies,
-  })
-      : getMovieCategory = category,
+  })  : getMovieCategory = category,
         getMovieList = movies,
         super(Pending()) {
     on<LoadInitialDataEvent>(
-          (event, emit) async {
+      (event, emit) async {
         final Resource<List<MovieCategoryData>> movieCategoryListResource =
-        await getMovieCategory();
+            await getMovieCategory();
 
         final result = movieCategoryListResource.when(
           data: (data) {
@@ -47,12 +47,10 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
           return;
         }
 
-        emit(
-            LoadedState(
-              categories: categories,
-              movies: Resource.pending(),
-            )
-        );
+        emit(LoadedState(
+          categories: categories,
+          movies: Resource.pending(),
+        ));
 
         final firstCategory = categories.first;
 
@@ -62,35 +60,38 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
           emit(ErrorState());
         }
 
-        emit(
-            LoadedState(
-              categories: categories,
-              movies: movieListResource,
-            )
-        );
+        emit(LoadedState(
+          categories: categories,
+          movies: movieListResource,
+        ));
       },
     );
 
-    on<GetMoviesForCategoryEvent>((event, emit) async{
+    on<GetMoviesForCategoryEvent>(
+      (event, emit) async {
+        final currentState = state;
 
-      final currentState = state;
+        if (currentState is! LoadedState) return;
 
-      if(currentState is! LoadedState) return;
+        final categories = currentState.categories;
 
-      final categories = currentState.categories;
+        emit(LoadedState(
+          categories: categories,
+          movies: Resource.pending(),
+        ));
 
-      emit(
-        LoadedState(categories: categories, movies: Resource.pending(),)
-      );
+        final movieListResource = await getMovieList(event.catName);
 
+        if (movieListResource.error != null) {
+          emit(ErrorState());
+        }
 
-      final movieListResource = await getMovieList(event.catName);
-
-      emit(
-          LoadedState(categories: categories, movies: movieListResource,)
-      );
-
-    },);
+        emit(LoadedState(
+          categories: categories,
+          movies: movieListResource,
+        ));
+      },
+    );
 
     add(LoadInitialDataEvent());
   }

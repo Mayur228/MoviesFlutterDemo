@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:movie_flutter_demo/core/data/repository/movie_repository.dart';
+import 'package:movie_flutter_demo/features/addmovie/domain/repository/movie_repository.dart';
+import 'package:movie_flutter_demo/features/addmovie/domain/usecases/add_movies_usecase.dart';
+import 'package:movie_flutter_demo/features/addmovie/presentation/bloc/add_movie_bloc.dart';
+import 'package:movie_flutter_demo/features/addmovie/presentation/bloc/add_movie_state.dart';
+import 'package:movie_flutter_demo/features/addmovie/presentation/widgets/add_movie_widget.dart';
+import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_category_entiy.dart';
 
+import '../../../homescreen/data/repository/movie_repository_impl.dart';
 import '../widgets/drop_down_widget.dart';
 
-class AddMovieScreen extends StatefulWidget {
-  const AddMovieScreen({Key? key}) : super(key: key);
+class AddMovieScreen extends StatelessWidget {
+  final List<MovieCategoryData> movieCat;
 
-  @override
-  State<AddMovieScreen> createState() => _AddMovieScreenState();
-}
-
-class _AddMovieScreenState extends State<AddMovieScreen> {
-  ImagePicker? _picker;
-
-  @override
-  void initState() {
-    super.initState();
-    _picker = ImagePicker();
-  }
+  const AddMovieScreen({Key? key, required this.movieCat}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,87 +26,55 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
           title: const Text('Add Movie'),
           centerTitle: true,
         ),
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                children: [
-                  const DropDownWidget(),
-                  const SizedBox(height: 15),
-                  const DropDownWidget(),
-                  const SizedBox(height: 15),
-                  const TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Enter Movie Title',
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.teal, style: BorderStyle.solid),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  const TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Enter Movie Description',
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.teal, style: BorderStyle.solid),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                            onPressed: () => {},
-                            child: const Text('Add Actors')),
-                      ),
-                      // OutlinedButton(
-                      //     onPressed: () => {}, child: const Text('Add Movie\n Cover')
-                      // ),
-                      const SizedBox(width: 5),
-                      Expanded(
-                        child: OutlinedButton(
-                            onPressed: () => {
-                                  _picker?.pickImage(
-                                      source: ImageSource.gallery)
-                                },
-                            child: const Text('Add Movie Poster')),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  RatingBar.builder(
-                    initialRating: 3,
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    glow: false,
-                    onRatingUpdate: (rating) {
-                      print(rating);
-                    },
-                  ),
-                  const SizedBox(height: 15),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: ElevatedButton(
-                        onPressed: () => {}, child: const Text('Submit')),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+        body: provider(context),
       ),
     );
   }
+
+  BlocProvider<AddMovieBloc> provider(BuildContext context) {
+    final bloc = AddMovieBloc(
+      categories: movieCat, moviesUseCase:AddMoviesUseCase(),
+    );
+
+    return BlocProvider(
+      create: (_) => bloc,
+      child: BlocBuilder<AddMovieBloc, AddMovieState>(
+        builder: (context, state) {
+          if (state is PendingState) {
+            // return _buildAllPending();
+            return AddMovieWidget(category: movieCat);
+          } else if (state is ErrorState) {
+            return _buildError();
+          } else if (state is LoadedState) {
+            return AddMovieWidget(category: movieCat);
+          }
+          return Container();
+        },
+      ),
+    );
+  }
+
+  Widget _buildAllPending() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _buildError() {
+    return const Center(
+      child: Text("Error in loading data"),
+    );
+  }
 }
+/*
+class _AddMovieScreenState extends State<AddMovieScreen> {
+  ImagePicker? _picker;
+
+  @override
+  void initState() {
+    super.initState();
+    _picker = ImagePicker();
+  }
+
+
+}*/

@@ -5,6 +5,7 @@ import 'package:movie_flutter_demo/features/homescreen/presentation/widgets/grid
 import 'package:movie_flutter_demo/features/homescreen/presentation/widgets/list_widget.dart';
 
 import '../../domain/entities/movies_category_entiy.dart';
+import 'drawer_widget.dart';
 
 class HomeWidget extends StatelessWidget {
   final List<MovieCategoryData> categories;
@@ -20,16 +21,19 @@ class HomeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListViewWidget(
-          categories: categories,
-          onSelect: (val) {
-            onSelect(val);
-          },
-        ),
-        Expanded(child: _buildMovieList()),
-      ],
+    return Scaffold(
+      body: Column(
+        children: [
+          ListViewWidget(
+            categories: categories,
+            onSelect: (val) {
+              onSelect(val);
+            },
+          ),
+          Expanded(child: _buildMovieList()),
+        ],
+      ),
+      drawer:  DrawerWidget(movieCat: categories,),
     );
   }
 

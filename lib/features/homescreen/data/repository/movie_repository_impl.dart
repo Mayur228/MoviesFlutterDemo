@@ -38,10 +38,18 @@ class MovieRepositoryImpl implements MovieRepository {
 
   @override
   Future<Resource<List<MovieListData>>> getMovieForCategory(String categoryId) {
-    return Future.value(
-      Resource.data(
-        _movieList.where((element) => element.movieCat == categoryId).toList(),
-      ),
-    );
+    final selectedCatMovies = _movieList.where((element) => element.movieCat == categoryId).toList();
+
+    if(selectedCatMovies.isEmpty) {
+      return Future.value(
+        Resource.error("No Movies Found"),
+      );
+    }else {
+      return Future.value(
+        Resource.data(
+          _movieList.where((element) => element.movieCat == categoryId).toList(),
+        ),
+      );
+    }
   }
 }

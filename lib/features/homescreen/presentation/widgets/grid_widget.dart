@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_list_entiy.dart';
-import 'package:movie_flutter_demo/features/homescreen/domain/usecases/get_movie_list.dart';
 
 class GridViewWidget extends StatelessWidget {
 
@@ -11,7 +10,6 @@ class GridViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
 
     return GridView.count(
         crossAxisCount: 2,

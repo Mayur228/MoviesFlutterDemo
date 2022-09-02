@@ -1,38 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_category_entiy.dart';
 
 import '../../domain/usecases/get_movie_category.dart';
 
-class VerticalListViewWidget extends StatefulWidget {
-  const VerticalListViewWidget({Key? key}) : super(key: key);
-
-  @override
-  State<VerticalListViewWidget> createState() => _VerticalListViewWidgetState();
-}
-
-class _VerticalListViewWidgetState extends State<VerticalListViewWidget> {
-  GetMovieCategory? movieCategory;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    movieCategory = GetMovieCategory();
-  }
+class VerticalListViewWidget extends StatelessWidget {
+  final  List<MovieCategoryData> moviesCat;
+  const VerticalListViewWidget({Key? key, required this.moviesCat}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container();
-    /*
     return ListView.builder(
         shrinkWrap: true,
-        itemCount: movieCategory!.getData().length,
+        itemCount: moviesCat.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title :Text(movieCategory!.getData()[index].movieCat,
+            title :Text(moviesCat[index].movieCat,
               style: const TextStyle(color: Colors.black,fontSize: 18.0),)
           );
         });
 
-     */
   }
 }

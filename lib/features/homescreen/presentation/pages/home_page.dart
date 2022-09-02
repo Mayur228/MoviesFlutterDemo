@@ -4,7 +4,6 @@ import 'package:movie_flutter_demo/features/homescreen/data/repository/movie_rep
 import 'package:movie_flutter_demo/features/homescreen/domain/usecases/get_movie_category.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/usecases/get_movie_list.dart';
 import 'package:movie_flutter_demo/features/homescreen/presentation/bloc/bloc.dart';
-import 'package:movie_flutter_demo/features/homescreen/presentation/widgets/drawer_widget.dart';
 import 'package:movie_flutter_demo/features/homescreen/presentation/widgets/home_widget.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -12,13 +11,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Movie'),
-          centerTitle: true,
-        ),
-        body: provider(context),
-        drawer: const DrawerWidget());
+    return Scaffold(  appBar: AppBar(
+      title: const Text('Movie'),
+      centerTitle: true,
+    ),
+      body: provider(context),
+    );
   }
 
   BlocProvider<HomeBloc> provider(BuildContext context) {
@@ -51,13 +49,13 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildAllPending() {
-    return Center(
+    return const Center(
       child: CircularProgressIndicator(),
     );
   }
 
   Widget _buildError() {
-    return Center(
+    return const Center(
       child: Text("Error in loading data"),
     );
   }
