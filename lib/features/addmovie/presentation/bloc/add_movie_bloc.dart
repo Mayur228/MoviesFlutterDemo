@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_flutter_demo/features/addmovie/data/datasources/entities/movies.dart';
 import 'package:movie_flutter_demo/features/addmovie/domain/usecases/add_movies_usecase.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/bloc/add_movie_event.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/bloc/add_movie_state.dart';
@@ -24,7 +23,7 @@ class AddMovieBloc extends Bloc<AddMovieEvent, AddMovieState> {
     add(SetDropDownCategoryDataEvent(list));
   }
 
-  addMovie(Movies movies) {
-    addMovies.repository.addMovies(movies);
-  }
+  // addMovie(Movies movies) {
+  //   addMovies.repository.addMovies(movies);
+  // }
 }

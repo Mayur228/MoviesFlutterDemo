@@ -10,8 +10,8 @@ class Movies {
   final String description;
   final String category;
   final String poster;
-  final List<Actor> actors;
+  // final arra<Actor> actors;
   final double rating;
 
-  Movies(this.movieID, this.title, this.description, this.category, this.poster, this.actors, this.rating);
+  Movies(this.movieID, this.title, this.description, this.category, this.poster, this.rating);
 }

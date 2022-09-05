@@ -16,5 +16,4 @@ class MovieRepositoryImpl implements MovieRepository {
   Future<List<Movies>> getMovies() {
     return appDatabase.moviesDao.getAllMovies();
   }
-
 }

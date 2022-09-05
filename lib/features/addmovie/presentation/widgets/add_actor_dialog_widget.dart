@@ -12,7 +12,7 @@ class AddActorDialogWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const TextFieldWidget(hintText: "Enter Actor Name"),
+          TextFieldWidget(hintText: "Enter Actor Name",textEditingController: TextEditingController(),),
           const SizedBox(
             height: 10,
             width: 10,
