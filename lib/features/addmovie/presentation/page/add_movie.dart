@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_flutter_demo/features/addmovie/data/repository/movie_repository.dart';
-import 'package:movie_flutter_demo/features/addmovie/domain/usecases/add_movies_usecase.dart';
+import 'package:movie_flutter_demo/core/di/injection.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/bloc/add_movie_bloc.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/bloc/add_movie_state.dart';
-import 'package:movie_flutter_demo/features/addmovie/presentation/page/test.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/widgets/add_movie_widget.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_category_entiy.dart';
-
-import '../../data/datasources/local/app_databse.dart';
-
 
 class AddMovieScreen extends StatelessWidget {
   final List<MovieCategoryData> movieCat;
@@ -31,10 +26,7 @@ class AddMovieScreen extends StatelessWidget {
 
   BlocProvider<AddMovieBloc> provider(BuildContext context) {
 
-    final bloc = AddMovieBloc(
-      categories: movieCat,
-      moviesUseCase: AddMoviesUseCase(MovieRepositoryImpl(AppDataBaseImpl())),
-    );
+    final bloc = getIt<AddMovieBloc>();
 
     return BlocProvider(
       create: (_) => bloc,

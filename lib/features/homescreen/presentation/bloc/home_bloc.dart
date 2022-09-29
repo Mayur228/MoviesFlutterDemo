@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:movie_flutter_demo/core/util/resource.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_category_entiy.dart';
-import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_list_entiy.dart';
-
 import '../../domain/usecases/get_movie_category.dart';
 import '../../domain/usecases/get_movie_list.dart';
 import 'home_event.dart';
 import 'home_state.dart';
 
+@injectable
 class HomeBloc extends Bloc<HomeEvents, HomeState> {
   final GetMovieCategory getMovieCategory;
   final GetMovieList getMovieList;

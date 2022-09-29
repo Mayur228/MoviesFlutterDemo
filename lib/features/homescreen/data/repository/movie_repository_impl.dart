@@ -1,55 +1,48 @@
-import 'package:movie_flutter_demo/core/error/failures.dart';
+import 'package:injectable/injectable.dart';
 import 'package:movie_flutter_demo/core/util/resource.dart';
+import 'package:movie_flutter_demo/features/homescreen/data/datasources/home_data_sources.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_category_entiy.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_list_entiy.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/repository/movie_repository.dart';
 
+@Injectable(as: MovieRepository)
 class MovieRepositoryImpl implements MovieRepository {
-  final List<MovieListData> _movieList = [
-    MovieListData(
-        'm1',
-        'abc',
-        'test',
-        'Hollywood',
-        'https://assets.mubicdn.net/images/notebook/post_images/19893/images-w1400.jpg?1449196747',
-        4.5),
-    MovieListData(
-        'm1',
-        'abc',
-        'test',
-        'Bollywood',
-        'https://assets.mubicdn.net/images/notebook/post_images/19893/images-w1400.jpg?1449196747',
-        5),
-    MovieListData(
-        'm1',
-        'abc',
-        'test',
-        'Hollywood',
-        'https://assets.mubicdn.net/images/notebook/post_images/19893/images-w1400.jpg?1449196747',
-        2.5),
-    MovieListData(
-        'm1',
-        'abc',
-        'test',
-        'Hollywood',
-        'https://assets.mubicdn.net/images/notebook/post_images/19893/images-w1400.jpg?1449196747',
-        3.5),
-  ];
+  final HomeDataSources homeDataSources;
+
+  MovieRepositoryImpl(this.homeDataSources);
 
   @override
-  Future<Resource<List<MovieListData>>> getMovieForCategory(String categoryId) {
-    final selectedCatMovies = _movieList.where((element) => element.movieCat == categoryId).toList();
+  Future<Resource<List<MovieCategoryData>>> getMovieCategory() async {
+    final movieCategoryData = await homeDataSources.getMovieCategory();
 
-    if(selectedCatMovies.isEmpty) {
-      return Future.value(
-        Resource.error("No Movies Found"),
-      );
-    }else {
-      return Future.value(
-        Resource.data(
-          _movieList.where((element) => element.movieCat == categoryId).toList(),
-        ),
-      );
-    }
+    final movieCatList = movieCategoryData
+        .map(
+          (e) => MovieCategoryData(
+            movieCatId: e.movieCatId,
+            movieCat: e.movieCat,
+          ),
+        )
+        .toList();
+    return Future.value(Resource.data(movieCatList));
+  }
+
+  @override
+  Future<Resource<List<MovieListData>>> getMovieForCategory(
+      String categoryId) async {
+    final movieListData = await homeDataSources.getMovies(categoryId);
+
+    final movieList = movieListData
+        .map(
+          (e) => MovieListData(
+            movieId: e.movieID,
+            movieName: e.movieName,
+            movieDes: e.movieDes,
+            movieCat: e.movieCat,
+            moviePoster: e.moviePoster,
+            movieRating: e.movieRates,
+          ),
+        )
+        .toList();
+    return Future.value(Resource.data(movieList));
   }
 }

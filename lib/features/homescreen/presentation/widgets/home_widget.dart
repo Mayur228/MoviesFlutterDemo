@@ -11,12 +11,16 @@ class HomeWidget extends StatelessWidget {
   final List<MovieCategoryData> categories;
   final Resource<List<MovieListData>> movies;
   final ValueChanged<String> onSelect;
+  final ValueChanged<String> onCategorySelection;
+  final ValueChanged onAddItem;
 
   const HomeWidget({
     Key? key,
     required this.categories,
     required this.movies,
     required this.onSelect,
+    required this.onCategorySelection,
+    required this.onAddItem,
   }) : super(key: key);
 
   @override
@@ -33,7 +37,17 @@ class HomeWidget extends StatelessWidget {
           Expanded(child: _buildMovieList()),
         ],
       ),
-      drawer:  DrawerWidget(movieCat: categories,),
+      drawer: DrawerWidget(
+        movieCat: categories,
+        onAddItem: (value) {
+          Navigator.pop(context);
+          onAddItem("Add");
+        },
+        onCateCorySelection: (value) {
+          Navigator.pop(context);
+          onCategorySelection(value);
+        },
+      ),
     );
   }
 
@@ -47,7 +61,7 @@ class HomeWidget extends StatelessWidget {
         return Center(child: Text(error));
       },
       pending: () {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       },

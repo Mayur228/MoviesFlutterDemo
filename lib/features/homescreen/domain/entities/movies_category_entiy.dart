@@ -1,5 +1,3 @@
-import 'package:equatable/equatable.dart';
-
 class MovieCategoryData{
   final String movieCatId;
   final String movieCat;

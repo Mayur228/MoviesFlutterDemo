@@ -1,9 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:movie_flutter_demo/features/addmovie/domain/usecases/add_movies_usecase.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/bloc/add_movie_event.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/bloc/add_movie_state.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_category_entiy.dart';
 
+@injectable
 class AddMovieBloc extends Bloc<AddMovieEvent, AddMovieState> {
   final List<MovieCategoryData> category;
   final AddMoviesUseCase addMovies;

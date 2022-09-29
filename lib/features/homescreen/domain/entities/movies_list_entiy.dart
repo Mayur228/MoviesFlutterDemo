@@ -8,12 +8,12 @@ class MovieListData {
   final String moviePoster;
   final double movieRating;
 
-  const MovieListData(
-    this.movieId,
-    this.movieName,
-    this.movieDes,
-    this.movieCat,
-    this.moviePoster,
-    this.movieRating,
-  );
+  const MovieListData({
+    required this.movieId,
+    required this.movieName,
+    required this.movieDes,
+    required this.movieCat,
+    required this.moviePoster,
+    required this.movieRating,
+  });
 }

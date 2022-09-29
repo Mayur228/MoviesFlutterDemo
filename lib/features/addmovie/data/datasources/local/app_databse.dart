@@ -6,6 +6,7 @@ import 'package:movie_flutter_demo/features/addmovie/data/datasources/local/movi
 import 'package:movie_flutter_demo/features/addmovie/data/datasources/entities/movies.dart';
 
 part 'app_databse.g.dart';
+
 @Database(version: 1, entities: [Movies])
 abstract class AppDatabase extends FloorDatabase{
   MoviesDao get moviesDao;
