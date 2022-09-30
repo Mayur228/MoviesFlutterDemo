@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_flutter_demo/core/di/injection.dart';
+import 'package:movie_flutter_demo/features/addmovie/data/repository/movie_repository.dart';
+import 'package:movie_flutter_demo/features/addmovie/domain/repository/movie_repository.dart';
+import 'package:movie_flutter_demo/features/addmovie/domain/usecases/get_movies_usecase.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/bloc/add_movie_bloc.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/bloc/add_movie_state.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/widgets/add_movie_widget.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_category_entiy.dart';
+
+import '../../domain/usecases/add_movies_usecase.dart';
 
 class AddMovieScreen extends StatelessWidget {
   final List<MovieCategoryData> movieCat;
@@ -25,8 +30,11 @@ class AddMovieScreen extends StatelessWidget {
   }
 
   BlocProvider<AddMovieBloc> provider(BuildContext context) {
-
-    final bloc = getIt<AddMovieBloc>();
+    final bloc = AddMovieBloc(
+      categories: movieCat,
+      moviesUseCase: AddMoviesUseCase(MovieRepositoryImpl()),
+      movies: GetMoviesUseCase(MovieRepositoryImpl()),
+    );
 
     return BlocProvider(
       create: (_) => bloc,
@@ -39,6 +47,7 @@ class AddMovieScreen extends StatelessWidget {
               onPressed: (val) {
                 bloc.addMovies(val);
               },
+              onCategorySelection: (String value) {},
             );
           } else if (state is ErrorState) {
             return _buildError();
@@ -48,6 +57,7 @@ class AddMovieScreen extends StatelessWidget {
               onPressed: (val) {
                 bloc.addMovies(val);
               },
+              onCategorySelection: (String value) {},
             );
           }
           return Container();
@@ -55,12 +65,6 @@ class AddMovieScreen extends StatelessWidget {
       ),
     );
   }
-
-  /*provideDatabase() async {
-    final database = await $FloorAppDatabase.databaseBuilder('movieDatabase.db').build();
-
-   return database;
-  }*/
 
   Widget _buildAllPending() {
     return const Center(

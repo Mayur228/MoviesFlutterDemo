@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:movie_flutter_demo/features/addmovie/data/datasources/entities/movies.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/widgets/actor_listview_widget.dart';
@@ -16,8 +15,9 @@ import 'drop_down_widget.dart';
 class AddMovieWidget extends StatelessWidget {
   final List<MovieCategoryData> category;
   final ValueChanged onPressed;
+  final ValueChanged<String> onCategorySelection;
 
-  AddMovieWidget({Key? key, required this.category, required this.onPressed})
+  AddMovieWidget({Key? key, required this.category, required this.onPressed, required this.onCategorySelection})
       : super(key: key);
 
   TextEditingController myTitleTextController = TextEditingController();
@@ -39,6 +39,8 @@ class AddMovieWidget extends StatelessWidget {
                     category: category,
                     selectedCategory: category.first.movieCat,
                     onChange: (selectedCat) {
+                      print(selectedCat);
+                      onCategorySelection(selectedCat);
                       // onChanged(selectedCat)
                     },
                   ),
@@ -66,7 +68,11 @@ class AddMovieWidget extends StatelessWidget {
                                   context: context,
                                   builder: (context) {
                                     return openAddActorDialog();
-                                  });
+                                  }).then(
+                                (value) {
+                                  print(value);
+                                },
+                              );
                             }
                           },
                         ),
@@ -88,7 +94,9 @@ class AddMovieWidget extends StatelessWidget {
                   const ActorListViewWidget(),
                   const SizedBox(
                     height: 150,
-                    child: Image(image: NetworkImage("https://assets.mubicdn.net/images/notebook/post_images/19893/images-w1400.jpg?1449196747")),
+                    child: Image(
+                        image: NetworkImage(
+                            "https://assets.mubicdn.net/images/notebook/post_images/19893/images-w1400.jpg?1449196747")),
                   ),
                   const SizedBox(height: 15),
                   RatingBarWidget(onRatingUpdate: (val) {
@@ -101,10 +109,10 @@ class AddMovieWidget extends StatelessWidget {
                       buttonText: "Submit",
                       onPressed: (value) {
                         onPressed(Movies(
-                            Uuid().v1(),
+                            const Uuid().v1(),
                             myTitleTextController.text,
                             myDesTextController.text,
-                            "Bollywood",
+                            onCategorySelection.toString(),
                             "",
                             0));
                       },
@@ -120,12 +128,12 @@ class AddMovieWidget extends StatelessWidget {
   }
 
   openPicker() {
-    ImagePicker _picker = ImagePicker();
+    ImagePicker picker = ImagePicker();
 
-    _picker.pickImage(source: ImageSource.gallery);
+    picker.pickImage(source: ImageSource.gallery);
   }
 
   Widget openAddActorDialog() {
-    return const AddActorDialogWidget();
+    return AddActorDialogWidget();
   }
 }

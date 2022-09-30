@@ -5,17 +5,25 @@ import 'package:movie_flutter_demo/features/addmovie/domain/repository/movie_rep
 
 @Injectable(as: MovieRepository)
 class MovieRepositoryImpl implements MovieRepository {
-  final AppDatabase appDatabase;
+  // final AppDatabase appDatabase;
 
-  MovieRepositoryImpl(this.appDatabase);
+  MovieRepositoryImpl();
 
   @override
-  Future<void> addMovies(Movies movies) {
-    return appDatabase.moviesDao.addMovies(movies);
+  Future<void> addMovies(Movies movies) async {
+    final database = await getDatabase();
+    return database.moviesDao.addMovies(movies);
   }
 
   @override
-  Future<List<Movies>> getMovies() {
-    return appDatabase.moviesDao.getAllMovies();
+  Future<List<Movies>> getMovies() async {
+    final database = await getDatabase();
+    return database.moviesDao.getAllMovies();
+  }
+
+  Future<AppDatabase> getDatabase() async {
+    final database =
+        await $FloorAppDatabase.databaseBuilder('movieDatabase.db').build();
+    return database;
   }
 }
