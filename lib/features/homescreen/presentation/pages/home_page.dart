@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_flutter_demo/features/homescreen/presentation/bloc/bloc.dart';
+import 'package:movie_flutter_demo/features/homescreen/presentation/vo/like_param.dart';
 import 'package:movie_flutter_demo/features/homescreen/presentation/widgets/home_widget.dart';
+import 'package:movie_flutter_demo/features/moviedetails/presentation/pages/movie_details.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../addmovie/presentation/page/add_movie.dart';
@@ -39,7 +41,7 @@ class HomeScreen extends StatelessWidget {
         } else if (state is LoadedState) {
           return HomeWidget(
             categories: state.categories,
-            movies: state.movies,
+            movies: state.movieVo,
             onSelect: (String selectedCat) {
               bloc.getMovies(selectedCat);
             },
@@ -56,11 +58,32 @@ class HomeScreen extends StatelessWidget {
                 ),
               );
             },
+            openMovieDetails: (LikeParam likeParam) {
+              bloc.redirectToDetails(likeParam.movieId, likeParam.isLike);
+            },
+            movieId: (String value) {
+              bloc.likeMovie(value);
+            },
           );
         }
         return Container();
       },
-      listener: ((context, state) {}),
+      listener: ((context, state) async {
+        if (state is RedirectToDetailsState) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MovieDetails(
+                movieId: state.movieId,
+                isLike: state.isLike,
+                valueChanged: (LikeParam likeParam) {
+                  bloc.likeMovie(likeParam.movieId);
+                },
+              ),
+            ),
+          );
+        }
+      }),
     );
   }
 

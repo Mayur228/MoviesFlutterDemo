@@ -27,3 +27,15 @@ class GetMoviesForCategoryEvent extends HomeEvents {
   GetMoviesForCategoryEvent(this.catName);
 }
 
+class RedirectToDetails extends HomeEvents {
+  final String movieId;
+  final bool isLike;
+  RedirectToDetails(this.movieId,this.isLike);
+}
+
+class LikeEvent extends HomeEvents {
+  final String movieId;
+
+  LikeEvent(this.movieId);
+}
+

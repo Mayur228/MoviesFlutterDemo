@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_flutter_demo/core/di/injection.dart';
-import 'package:movie_flutter_demo/features/addmovie/data/repository/movie_repository.dart';
-import 'package:movie_flutter_demo/features/addmovie/domain/repository/movie_repository.dart';
+import 'package:movie_flutter_demo/features/addmovie/data/repository/movie_repository_impl.dart';
 import 'package:movie_flutter_demo/features/addmovie/domain/usecases/get_movies_usecase.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/bloc/add_movie_bloc.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/bloc/add_movie_state.dart';
@@ -10,6 +8,7 @@ import 'package:movie_flutter_demo/features/addmovie/presentation/widgets/add_mo
 import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_category_entiy.dart';
 
 import '../../domain/usecases/add_movies_usecase.dart';
+import '../../vo/actor_param.dart';
 
 class AddMovieScreen extends StatelessWidget {
   final List<MovieCategoryData> movieCat;
@@ -48,6 +47,8 @@ class AddMovieScreen extends StatelessWidget {
                 bloc.addMovies(val);
               },
               onCategorySelection: (String value) {},
+              onRatingChange: (double value) {},
+              onActorUpdate: (List<ActorParam> value) {},
             );
           } else if (state is ErrorState) {
             return _buildError();
@@ -58,6 +59,10 @@ class AddMovieScreen extends StatelessWidget {
                 bloc.addMovies(val);
               },
               onCategorySelection: (String value) {},
+              onRatingChange: (double value) {},
+              onActorUpdate: (List<ActorParam> value) {
+                print(value.first.actorName);
+              },
             );
           }
           return Container();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/widgets/elevated_button.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/widgets/text_field_widget.dart';
@@ -8,6 +9,7 @@ class AddActorDialogWidget extends StatelessWidget {
   AddActorDialogWidget({Key? key}) : super(key: key);
 
   final TextEditingController actorNameController = TextEditingController();
+  String? profileUrl = "";
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -36,8 +38,8 @@ class AddActorDialogWidget extends StatelessWidget {
           ),
           ElevatedButtonWidget(
             buttonText: "Submit",
-            onPressed: (value)  {
-              Navigator.pop(context,ActorParam(actorName: actorNameController.text, actorProfile: ""));
+            onPressed: (value) {
+              Navigator.pop(context,ActorParam(actorName: actorNameController.text, actorProfile: profileUrl));
             },
           ),
           const SizedBox(
@@ -54,6 +56,7 @@ class AddActorDialogWidget extends StatelessWidget {
     final actorProfile = await picker.pickImage(
       source: ImageSource.gallery,
     );
+    profileUrl = actorProfile?.path.toString();
    return actorProfile?.path.toString();
   }
 }

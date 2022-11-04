@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class RatingBarWidget extends StatelessWidget {
-  final ValueChanged onRatingUpdate;
+  final ValueChanged<double> onRatingUpdate;
   const RatingBarWidget({Key? key, required this.onRatingUpdate}) : super(key: key);
 
   @override

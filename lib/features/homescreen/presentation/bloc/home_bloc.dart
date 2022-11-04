@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:movie_flutter_demo/core/util/resource.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_category_entiy.dart';
+import 'package:movie_flutter_demo/features/homescreen/presentation/vo/movie_vo.dart';
 import '../../domain/usecases/get_movie_category.dart';
 import '../../domain/usecases/get_movie_list.dart';
 import 'home_event.dart';
@@ -49,7 +50,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
 
         emit(LoadedState(
           categories: categories,
-          movies: Resource.pending(),
+          movieVo: Resource.pending(),
         ));
 
         final firstCategory = categories.first;
@@ -60,14 +61,38 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
           emit(ErrorState());
         }
 
+        final moviesList = movieListResource.when(
+          data: (data) {
+            final mlist = data
+                .map((e) => (Movie(
+                    id: e.id!,
+                    poster: e.poster!,
+                    name: e.name!,
+                    des: e.description!,
+                    rating: e.rating!,
+                    isLike: false)))
+                .toList();
+            final list = MovieVo(list: mlist);
+
+            list.list.where((element) => element.id == "m1").toList();
+            return Resource.data(list);
+          },
+          error: (error) {
+            return null;
+          },
+          pending: () {
+            return null;
+          },
+        );
+
         emit(LoadedState(
           categories: categories,
-          movies: movieListResource,
+          movieVo: moviesList!,
         ));
       },
     );
 
-    on<GetMoviesForCategoryEvent>(
+    /*on<GetMoviesForCategoryEvent>(
       (event, emit) async {
         final currentState = state;
 
@@ -77,7 +102,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
 
         emit(LoadedState(
           categories: categories,
-          movies: Resource.pending(),
+          movieVo: Resource.pending(),
         ));
 
         final movieListResource = await getMovieList(event.catName);
@@ -88,16 +113,65 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
 
         emit(LoadedState(
           categories: categories,
-          movies: movieListResource,
+          movieVo: movieListResource,
         ));
       },
-    );
+    );*/
 
     add(LoadInitialDataEvent());
+
+    on<RedirectToDetails>((event, emit) {
+      final currentState = state;
+      if (currentState is! LoadedState) return;
+
+      emit(RedirectToDetailsState(event.movieId,event.isLike));
+      emit(currentState);
+    });
+
+    on<LikeEvent>((event, emit) {
+      final currentState = state;
+      if (currentState is! LoadedState) return;
+
+      currentState.movieVo.when(
+          data: (data) {
+
+            final updatedList = data.list.map((e) {
+             final a =  e.id == event.movieId
+                  ? Movie(
+                      id: e.id,
+                      poster: e.poster,
+                      name: e.name,
+                      des: e.des,
+                      rating: e.rating,
+                      isLike: e.isLike == true? false : true)
+                  : Movie(
+                      id: e.id,
+                      poster: e.poster,
+                      name: e.name,
+                      des: e.des,
+                      rating: e.rating,
+                      isLike: e.isLike);
+              return a;
+            }).toList();
+
+            // print(updatedList);  print('${updatedList.length}');
+
+            emit(LoadedState(categories: currentState.categories, movieVo: Resource.data(data.copyWith.call(list: updatedList))));
+          },
+          error: (error) {},
+          pending: () {});
+    });
   }
 
   getMovies(String selectedCat) {
     add(GetMoviesForCategoryEvent(selectedCat));
   }
 
+  redirectToDetails(String movieId,bool isLike) {
+    add(RedirectToDetails(movieId,isLike));
+  }
+
+  likeMovie(String movieId) {
+    add(LikeEvent(movieId));
+  }
 }

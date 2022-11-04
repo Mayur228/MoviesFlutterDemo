@@ -1,15 +1,23 @@
+import 'dart:convert';
+
 import 'package:injectable/injectable.dart';
 import 'package:movie_flutter_demo/features/homescreen/data/model/movie_category_model.dart';
 import 'package:movie_flutter_demo/features/homescreen/data/model/movie_list_model.dart';
 
+import '../../../../core/util/api_source.dart';
+
 abstract class HomeDataSources {
   Future<List<MovieCategoryDataModel>> getMovieCategory();
 
-  Future<List<MovieListDataModel>> getMovies(String category);
+  Future<List<Movie>> getMovies(String category);
 }
 
 @Singleton(as: HomeDataSources)
 class GetMovieCategoryData implements HomeDataSources {
+  final ApiSource apiSource;
+
+  GetMovieCategoryData(this.apiSource);
+
   @override
   Future<List<MovieCategoryDataModel>> getMovieCategory() {
     List<MovieCategoryDataModel> movieList = [
@@ -22,47 +30,20 @@ class GetMovieCategoryData implements HomeDataSources {
   }
 
   @override
-  Future<List<MovieListDataModel>> getMovies(String category) {
-    final List<MovieListDataModel> _movieList = [
-      MovieListDataModel(
-        movieID: 'm1',
-        movieName: 'abc',
-        movieDes: 'test',
-        movieCat: 'Hollywood',
-        moviePoster:
-            'https://assets.mubicdn.net/images/notebook/post_images/19893/images-w1400.jpg?1449196747',
-        movieRates: 4.5,
+  Future<List<Movie>> getMovies(String category) async {
+    final response = await apiSource.init().get("list.json");
+    final data = MovieListDataModel.fromJson(response.data);
+    final list = data.movies?.map(
+      (e) => Movie(
+        id: e?.id,
+        name: e?.name,
+        description: e?.description,
+        rating: e?.rating,
+        poster: e?.poster,
+        director: e?.director
       ),
-      MovieListDataModel(
-        movieID: 'm1',
-        movieName: 'abc',
-        movieDes: 'test',
-        movieCat: 'Bollywood',
-        moviePoster:
-            'https://assets.mubicdn.net/images/notebook/post_images/19893/images-w1400.jpg?1449196747',
-        movieRates: 5,
-      ),
-      MovieListDataModel(
-        movieID: 'm1',
-        movieName: 'abc',
-        movieDes: 'test',
-        movieCat: 'Hollywood',
-        moviePoster:
-            'https://assets.mubicdn.net/images/notebook/post_images/19893/images-w1400.jpg?1449196747',
-        movieRates: 2.5,
-      ),
-      MovieListDataModel(
-        movieID: 'm1',
-        movieName: 'abc',
-        movieDes: 'test',
-        movieCat: 'Hollywood',
-        moviePoster:
-            'https://assets.mubicdn.net/images/notebook/post_images/19893/images-w1400.jpg?1449196747',
-        movieRates: 3.5,
-      ),
-    ];
-    final movieList = _movieList.where((element) => element.movieCat == category).toList();
+    ).toList();
 
-    return Future.value(movieList);
+    return Future.value(list);
   }
 }

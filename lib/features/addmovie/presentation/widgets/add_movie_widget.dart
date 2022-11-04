@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:movie_flutter_demo/features/addmovie/data/datasources/entities/movies.dart';
@@ -7,6 +9,7 @@ import 'package:movie_flutter_demo/features/addmovie/presentation/widgets/elevat
 import 'package:movie_flutter_demo/features/addmovie/presentation/widgets/out_line_button_widget.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/widgets/rating_widget.dart';
 import 'package:movie_flutter_demo/features/addmovie/presentation/widgets/text_field_widget.dart';
+import 'package:movie_flutter_demo/features/addmovie/vo/actor_param.dart';
 import 'package:movie_flutter_demo/features/homescreen/domain/entities/movies_category_entiy.dart';
 import 'package:uuid/uuid.dart';
 
@@ -16,12 +19,24 @@ class AddMovieWidget extends StatelessWidget {
   final List<MovieCategoryData> category;
   final ValueChanged onPressed;
   final ValueChanged<String> onCategorySelection;
+  final ValueChanged<double> onRatingChange;
+  final ValueChanged<List<ActorParam>> onActorUpdate;
 
-  AddMovieWidget({Key? key, required this.category, required this.onPressed, required this.onCategorySelection})
+  AddMovieWidget(
+      {Key? key,
+      required this.category,
+      required this.onPressed,
+      required this.onCategorySelection,
+      required this.onRatingChange,
+      required this.onActorUpdate})
       : super(key: key);
 
   TextEditingController myTitleTextController = TextEditingController();
   TextEditingController myDesTextController = TextEditingController();
+
+  List<ActorParam> actorList = List.empty(growable: true);
+
+  String? moviePoster = "";
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +54,6 @@ class AddMovieWidget extends StatelessWidget {
                     category: category,
                     selectedCategory: category.first.movieCat,
                     onChange: (selectedCat) {
-                      print(selectedCat);
                       onCategorySelection(selectedCat);
                       // onChanged(selectedCat)
                     },
@@ -70,7 +84,9 @@ class AddMovieWidget extends StatelessWidget {
                                     return openAddActorDialog();
                                   }).then(
                                 (value) {
-                                  print(value);
+                                  // onActorUpdate(value);
+                                  actorList.add(value as ActorParam);
+                                  onActorUpdate(actorList);
                                 },
                               );
                             }
@@ -91,16 +107,20 @@ class AddMovieWidget extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 15),
-                  const ActorListViewWidget(),
-                  const SizedBox(
+                  ActorListViewWidget(
+                    list: actorList,
+                  ),
+                  SizedBox(
                     height: 150,
                     child: Image(
-                        image: NetworkImage(
-                            "https://assets.mubicdn.net/images/notebook/post_images/19893/images-w1400.jpg?1449196747")),
+                      image: FileImage(
+                        File(moviePoster.toString()),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 15),
                   RatingBarWidget(onRatingUpdate: (val) {
-                    print(val);
+                    onRatingChange(val);
                   }),
                   const SizedBox(height: 15),
                   Align(
@@ -108,13 +128,16 @@ class AddMovieWidget extends StatelessWidget {
                     child: ElevatedButtonWidget(
                       buttonText: "Submit",
                       onPressed: (value) {
-                        onPressed(Movies(
+                        onPressed(
+                          Movies(
                             const Uuid().v1(),
                             myTitleTextController.text,
                             myDesTextController.text,
                             onCategorySelection.toString(),
                             "",
-                            0));
+                            0,
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -127,13 +150,17 @@ class AddMovieWidget extends StatelessWidget {
     );
   }
 
-  openPicker() {
+  openPicker() async {
     ImagePicker picker = ImagePicker();
 
-    picker.pickImage(source: ImageSource.gallery);
+    final photo = await picker.pickImage(source: ImageSource.gallery);
+    moviePoster = photo?.path.toString();
+    return photo?.path.toString();
   }
 
   Widget openAddActorDialog() {
     return AddActorDialogWidget();
   }
+
+  // NetworkImage("https://www.wikihow.com/images/thumb/c/cf/Become-an-Actor-Step-1-Version-3.jpg/v4-460px-Become-an-Actor-Step-1-Version-3.jpg.webp"),
 }

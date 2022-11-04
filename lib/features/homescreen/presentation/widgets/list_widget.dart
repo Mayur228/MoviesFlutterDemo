@@ -35,7 +35,6 @@ class ListViewWidget extends StatelessWidget {
               ),
               onTap: () {
                 onSelect(categories[index].movieCat);
-                print(categories[index].movieCat);
               },
             );
           }),
